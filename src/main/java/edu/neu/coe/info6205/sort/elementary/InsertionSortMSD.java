@@ -1,10 +1,16 @@
 package edu.neu.coe.info6205.sort.elementary;
 
+import java.text.Collator;
+import java.util.Locale;
+import edu.neu.coe.info6205.util.FileUtil;
+
 /**
  * This is a basic implementation of insertion sort.
  * It does not extend Sort, nor does it employ any optimizations.
  */
 public class InsertionSortMSD {
+
+    public static String lang = FileUtil.getSortLanguage();
 
     public static void sort(String[] a, int lo, int hi, int d) {
         for (int i = lo; i < hi; i++)
@@ -12,8 +18,14 @@ public class InsertionSortMSD {
                 swap(a, j, j - 1);
     }
 
+//    private static boolean less(String v, String w, int d) {
+//        return v.substring(d).compareTo(w.substring(d)) < 0;
+//    }
+
     private static boolean less(String v, String w, int d) {
-        return v.substring(d).compareTo(w.substring(d)) < 0;
+        if (lang.equals(FileUtil.SortLanguage.CHINESE.toString())) {
+            return Collator.getInstance(Locale.CHINA).compare(v, w) < 0;
+        } else return v.substring(d).compareTo(w.substring(d)) < 0;
     }
 
     private static void swap(Object[] a, int j, int i) {

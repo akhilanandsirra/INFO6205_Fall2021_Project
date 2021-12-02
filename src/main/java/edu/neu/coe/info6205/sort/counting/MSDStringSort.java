@@ -1,6 +1,12 @@
 package edu.neu.coe.info6205.sort.counting;
 
 import edu.neu.coe.info6205.sort.elementary.InsertionSortMSD;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
+import java.util.Arrays;
+
 
 /**
  * Class to implement Most significant digit string sort (a radix sort).
@@ -41,15 +47,33 @@ public class MSDStringSort {
             if (hi - lo >= 0) System.arraycopy(aux, 0, a, lo, hi - lo);
             // Recursively sort for each character value.
             // TO BE IMPLEMENTED
+            for (int r = 0; r < radix; r++)
+                sort(a, lo + count[r], lo + count[r+1] - 1, d+1);
         }
     }
 
     private static int charAt(String s, int d) {
-        if (d < s.length()) return s.charAt(d);
+//        if (d < s.length()) return s.charAt(d);
+//        else return -1;
+        String tempStr = "";
+        try {
+            HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+//            format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+//            format.setVCharType(HanyuPinyinVCharType.WITH_V);
+            tempStr = PinyinHelper.toHanyuPinyinString(s, format, " ");
+        } catch (BadHanyuPinyinOutputFormatCombination e) {
+            System.out.println(e.getMessage());
+        }
+        if (d < tempStr.length()) return tempStr.charAt(d);
         else return -1;
     }
 
     private static final int radix = 256;
     private static final int cutoff = 15;
     private static String[] aux;       // auxiliary array for distribution
+    public static void main(String[] args) {
+        String[] a = {"刘持平", "洪文胜", "樊辉辉", "苏会敏", "高民政"};
+        MSDStringSort.sort(a);
+        System.out.println(Arrays.toString(a));
+    }
 }
